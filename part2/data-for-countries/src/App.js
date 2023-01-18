@@ -33,6 +33,7 @@ function App() {
   const addSearch = (event) => {
     event.preventDefault()
   }
+  
   // ---------------- set show list ---------------- 
 
   const List = () => {
@@ -50,15 +51,23 @@ function App() {
     }
     const showList = setShowList()
     console.log('show list: ',showList)
-
+    // ---------------- set show detail ---------------- 
+    const arr = new Array(showList.length).fill(false)
+    const [showDetail,setShowDetail] = useState(new Array(showList.length).fill(false))
+    console.log('showDetail: ',showDetail)
     if(showList.length > 10)
     {
       return(<p>Too many matches, specify another filter</p>)
     }else if(showList.length <=10 && showList.length > 1){
+      
       return (
-        showList.map(country => (
-          <p key={country.name.common}>{country.name.common}</p>
-        ))
+        showList.map(country => {
+          return(
+            <p key={country.name.common}>{country.name.common} <button>
+              show
+              </button></p>
+          )
+        } )
       )
     }else if(showList.length === 1)
     {
@@ -81,6 +90,8 @@ function App() {
     }
     
   }
+
+   
 
 
   return (
