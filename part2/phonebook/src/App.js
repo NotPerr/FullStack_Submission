@@ -3,6 +3,7 @@ import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import bookService from './services/persons'
 
 const App = () => {
   //--------------- states declaration ---------------
@@ -14,8 +15,8 @@ const App = () => {
 
   useEffect(() => {
     console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
+    bookService
+      .getAll()
       .then(response => {
         console.log('promise fulfilled')
         setPersons(response.data)
@@ -73,8 +74,8 @@ const App = () => {
         name: newName,
         number: newNumber
       }
-      axios
-        .post('http://localhost:3001/persons',newContact)
+      bookService
+        .create(newContact)
         .then(response => {
           setPersons(persons.concat(newContact))
           setNewName('')
