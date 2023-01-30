@@ -76,29 +76,56 @@ const App = () => {
       bookService
         .create(newContact)
         .then(response => {
-          setPersons(persons.concat(newContact))
+          bookService
+            .getAll()
+            .then(response => {
+              console.log('promise fulfilled')
+              setPersons(response.data)
+            })
           setNewName('')
           setNewNumber('')
         })
       
     }else {
-      alert(`${newName} is already added to phonebook`)
+      // alert(`${newName} is already added to phonebook`)
+      const newContact = {
+        name: newName,
+        number: newNumber
+      }
+      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`))
+      {
+        console.log('replace!')
+        const id = persons.findIndex((p) => p.name === newName)
+        bookService
+          .update(id+1,newContact)
+          .then(response => {
+            console.log(response)
+            setPersons(persons.map(p => p.id !== id+1 ? p : response.data))
+          })
+      }else {
+        console.log('dont replace')
+      }
     }
   }
 //--------------- remove contact ---------------
 const removeContactAt = id => {
-  const target = showPhoneBook.find(p => p.id === id)
-  const num = id
+  // const target = showPhoneBook.find(p => p.id === id)
   if(window.confirm('Do you really want to delete?')) {
       bookService
           .remove(id)
           .then((response) => {
-            {
-              console.log('delete!')
-              
-            }  
+           {
+             console.log('delete!')
+            //  setPersons(persons.map(p => p.id !== response.data.id))
+            bookService
+              .getAll()
+              .then(response => {
+                console.log('promise fulfilled')
+                setPersons(response.data)
+              })
+           }   
           }
-            
+           
           )
   }
 }
@@ -114,13 +141,7 @@ const removeContactAt = id => {
       />
       <h2>Numbers</h2>
       <Persons showPhoneBook={showPhoneBook} removeContact={removeContactAt}/>
-      {/* {showPhoneBook.map(person => 
-        return (
-          <>
-            <Persons person={{person}}/>
-          </>
-        )     
-      )} */}
+      
     </div>
   )
 }
