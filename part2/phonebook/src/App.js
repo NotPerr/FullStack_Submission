@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
@@ -86,7 +85,23 @@ const App = () => {
       alert(`${newName} is already added to phonebook`)
     }
   }
-
+//--------------- remove contact ---------------
+const removeContactAt = id => {
+  const target = showPhoneBook.find(p => p.id === id)
+  const num = id
+  if(window.confirm('Do you really want to delete?')) {
+      bookService
+          .remove(id)
+          .then((response) => {
+            {
+              console.log('delete!')
+              
+            }  
+          }
+            
+          )
+  }
+}
   
 
   return (
@@ -98,7 +113,14 @@ const App = () => {
         handleNumberChange={handleNumberChange}  
       />
       <h2>Numbers</h2>
-      <Persons showPhoneBook={showPhoneBook}/>
+      <Persons showPhoneBook={showPhoneBook} removeContact={removeContactAt}/>
+      {/* {showPhoneBook.map(person => 
+        return (
+          <>
+            <Persons person={{person}}/>
+          </>
+        )     
+      )} */}
     </div>
   )
 }

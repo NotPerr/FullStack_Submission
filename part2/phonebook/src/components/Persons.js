@@ -1,11 +1,15 @@
-const Persons = ({showPhoneBook}) => {
+
+
+const Persons = ({showPhoneBook,removeContact}) => {
+
+
     return (
         <>
-            {showPhoneBook.map(person => {return (
+          {showPhoneBook.map(person => {return (
                 <div key={person.name}>
-                    <p>{person.name} {person.number}</p>
+                    {person.name} {person.number} <button onClick={() => removeContact(person.id)}>delete</button>
                 </div>
-            )})}
+            )})}  
         </>
     )
 }
