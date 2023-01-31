@@ -11,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter,setFilter] = useState('')
   const [hasFilter,setHasFilter] = useState(false)
+  const [message,setMessage] = useState('')
 
   useEffect(() => {
     console.log('effect')
@@ -76,17 +77,24 @@ const App = () => {
       bookService
         .create(newContact)
         .then(response => {
-          bookService
-            .getAll()
-            .then(response => {
-              console.log('promise fulfilled')
-              setPersons(response.data)
-            })
+          // bookService
+          //   .getAll()
+          //   .then(response => {
+          //     console.log('promise fulfilled')
+          //     setPersons(response.data)
+          //   })
+          setPersons(persons.concat(response.data))
+          
+          setMessage(`Added ${response.data.name}`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
           setNewName('')
           setNewNumber('')
         })
       
     }else {
+      //--------------- change number ---------------
       // alert(`${newName} is already added to phonebook`)
       const newContact = {
         name: newName,
@@ -94,13 +102,18 @@ const App = () => {
       }
       if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`))
       {
-        console.log('replace!')
-        const id = persons.findIndex((p) => p.name === newName)
+        
+        const id = persons.findIndex((p) => p.name === newName) + 1
+        console.log(`replace! id = ${id}`)
         bookService
-          .update(id+1,newContact)
+          .update(id,newContact)
           .then(response => {
             console.log(response)
-            setPersons(persons.map(p => p.id !== id+1 ? p : response.data))
+            setPersons(persons.map(p => p.id !== id ? p : response.data))
+            setMessage(`changed ${response.data.name}'s number`)
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
           })
       }else {
         console.log('dont replace')
@@ -129,11 +142,14 @@ const removeContactAt = id => {
           )
   }
 }
-  
 
+
+  
+  
   return (
     <div>
       <h2>Phonebook</h2>
+      {message ? <div className='succeed-message'>{message}</div> : null}
       <Filter addFilter={addFilter} filter={filter} handleFilterChange={handleFilterChange}/>
       <h2>add a new contact</h2>
       <PersonForm addContact={addContact} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber}
