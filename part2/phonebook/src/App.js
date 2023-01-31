@@ -12,6 +12,7 @@ const App = () => {
   const [filter,setFilter] = useState('')
   const [hasFilter,setHasFilter] = useState(false)
   const [message,setMessage] = useState('')
+  const [errorMessage,setErrorMessage] = useState('')
 
   useEffect(() => {
     console.log('effect')
@@ -115,6 +116,12 @@ const App = () => {
               setMessage(null)
             }, 5000)
           })
+          .catch(error => {
+            setErrorMessage(`Information of ${newName} has already been removed from server`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+          })
       }else {
         console.log('dont replace')
       }
@@ -150,6 +157,7 @@ const removeContactAt = id => {
     <div>
       <h2>Phonebook</h2>
       {message ? <div className='succeed-message'>{message}</div> : null}
+      {errorMessage ? <div className='error-message'>{errorMessage}</div> : null}
       <Filter addFilter={addFilter} filter={filter} handleFilterChange={handleFilterChange}/>
       <h2>add a new contact</h2>
       <PersonForm addContact={addContact} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber}
