@@ -35,7 +35,7 @@ function App() {
   }
   
   // ---------------- set show list ---------------- 
-
+ 
   const List = () => {
     let filter = search.toLowerCase()
     const setShowList = () => {
@@ -51,30 +51,68 @@ function App() {
     }
     const showList = setShowList()
     console.log('show list: ',showList)
+     // ---------------- send detail content ----------------
+     const [showDetail,setShowDetail] = useState(false)
+     const [detail,setDetail] = useState({})
+     const Detail = (country) => {
+      setShowDetail(!showDetail)
+      console.log('country:',country)
+      const copy = country
+      console.log('copy: ',copy)
+      setDetail(copy)
+      console.log('detail: ',detail)
+     }
+     // ---------------- show detail content ----------------
+     const ShowDetail = (detail) => {
+      console.log('show content: ',detail)
+      console.log('detail.name.common:',detail.detail.name.common)
+      const languages = Object.keys(detail.detail.languages)
+      return (
+        <div>
+          <h1>{detail.detail.name.common}</h1>
+          <p>capital: {detail.detail.capital}</p>
+          <p>area: {detail.detail.area}</p>
+          <h2>languages:</h2>
+          <ul>
+          {languages.map(lan => <li key={lan}>{detail.detail.languages[lan]}</li>)}
+          </ul>
+          <img src={detail.detail.flags.png}/>
+        </div>
+      )
+        
+     }
     // ---------------- set show detail ---------------- 
-    const arr = new Array(showList.length).fill(false)
-    const [showDetail,setShowDetail] = useState(new Array(showList.length).fill(false))
-    console.log('showDetail: ',showDetail)
+    // showList.map(c => {arr.push({country:c,show:false})})
+    // console.log('arr: ',arr)
+    // arr.map(a => {console.log('a: ',a)})
+    // console.log('showDetail: ',showDetail)
     if(showList.length > 10)
     {
       return(<p>Too many matches, specify another filter</p>)
     }else if(showList.length <=10 && showList.length > 1){
-      
+      console.log('showDetail',showDetail)
       return (
-        showList.map(country => {
+       <>
+         {showList.map(country => {
           return(
-            <p key={country.name.common}>{country.name.common} <button>
-              show
-              </button></p>
+            <div key={country.name.common}>
+              <p >{country.name.common} <button onClick={() => Detail(country)}>
+                {showDetail?'hide':'show'}
+                </button>
+              </p>
+              
+            </div>
+            
           )
-        } )
+        } )}
+        {showDetail?<ShowDetail detail={detail}/>:null}
+
+       </>
+        
       )
     }else if(showList.length === 1)
     {
-      //console.log('common name: ',showList[0].name)
-      //console.log('languages: ',showList[0].languages)
       const languages = Object.keys(showList[0].languages)
-      //console.log(languages)
       return (
         <>
           <h1>{showList[0].name.common}</h1>
