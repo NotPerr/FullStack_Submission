@@ -97,7 +97,7 @@ function App() {
           return(
             <div key={country.name.common}>
               <p >{country.name.common} <button onClick={() => Detail(country)}>
-                {showDetail?'hide':'show'}
+                show
                 </button>
               </p>
               
